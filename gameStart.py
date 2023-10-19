@@ -6,7 +6,7 @@ class GameStart:
         self.image = load_image('play.png')
 
     def draw(self):
-        self.image.draw(400, 400)
+        self.image.draw(400, 200, 435/3, 120/3)
 
     def update(self):
         pass
