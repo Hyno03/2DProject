@@ -4,13 +4,14 @@ import game_world
 
 
 class GameStart:
+    clicked = False
+
     def __init__(self):
         self.image = load_image('play.png')
         self.x, self.y = 400, 200
-        self.clicked = False
 
     def draw(self):
-        self.image.draw(self.x, self.y, 435/3, 120/3)
+        self.image.draw(self.x, self.y, 435 / 3, 120 / 3)
 
     def update(self):
         if self.clicked:
