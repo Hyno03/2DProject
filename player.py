@@ -2,24 +2,25 @@ from pico2d import load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN
 
 
 def upkey_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].type == SDLK_UP
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
 
 
 def upkey_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].type == SDLK_UP
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_UP
 
 
 def downkey_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].type == SDLK_DOWN
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_DOWN
 
 
 def downkey_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].type == SDLK_DOWN
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
 
 class Idle:
     @staticmethod
     def enter(player, e):
+        player.dir = 0
         player.frame = 0
 
     @staticmethod
@@ -62,23 +63,29 @@ class Swim:
 class StateMachine:
     def __init__(self, player):
         self.player = player
-        self.curstate = Idle
+        self.cur_state = Idle
         self.transitions = {
-            Idle: {upkey_down: Swim, downkey_down: Swim},
-            Swim: {upkey_up: Idle, downkey_up: Idle}
+            Idle: {upkey_down: Swim, upkey_up: Swim, downkey_down: Swim, downkey_up: Swim},
+            Swim: {upkey_down: Idle, upkey_up: Idle, downkey_down: Idle, downkey_up: Idle}
         }
 
     def start(self):
-        self.curstate.enter(self.player, ('NONE', 0))
+        self.cur_state.enter(self.player, ('NONE', 0))
 
     def update(self):
-        self.curstate.do(self.player)
+        self.cur_state.do(self.player)
 
     def handle_event(self, e):
-        pass
+        for check_event, next_state in self.transitions[self.cur_state].items():
+            if check_event(e):
+                self.cur_state.exit(self.player, e)
+                self.cur_state = next_state
+                self.cur_state.enter(self.player, e)
+                return True
+        return False
 
     def draw(self):
-        self.curstate.draw(self.player)
+        self.cur_state.draw(self.player)
 
 
 class Player:

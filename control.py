@@ -2,7 +2,7 @@ from pico2d import *
 
 import game_world
 from player import Player
-from title_mode import GameStart
+# from title_mode import GameStart
 
 
 def handle_events():
@@ -14,13 +14,13 @@ def handle_events():
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
-        elif event.type == SDL_MOUSEBUTTONDOWN:
-            if event.button == SDL_BUTTON_LEFT:
-                mouse_x, mouse_y = event.x, 600 - event.y
-                # 스타트 버튼 누를 시 사라짐
-                if gameStart.x - gameStart.image.w // 2 < mouse_x < gameStart.x + gameStart.image.w // 2 and \
-                        gameStart.y - gameStart.image.h // 2 < mouse_y < gameStart.y + gameStart.image.h // 2:
-                    gameStart.clicked = True
+        # elif event.type == SDL_MOUSEBUTTONDOWN:
+        #     if event.button == SDL_BUTTON_LEFT:
+        #         mouse_x, mouse_y = event.x, 600 - event.y
+        #         # 스타트 버튼 누를 시 사라짐
+        #         if gameStart.x - gameStart.image.w // 2 < mouse_x < gameStart.x + gameStart.image.w // 2 and \
+        #                 gameStart.y - gameStart.image.h // 2 < mouse_y < gameStart.y + gameStart.image.h // 2:
+        #             gameStart.clicked = True
 
 
 def reset_world():
@@ -29,9 +29,9 @@ def reset_world():
     global player
 
     running = True
-
-    gameStart = GameStart()
-    # game_world.add_object(gameStart, 0)
+    #
+    # gameStart = GameStart()
+    # # game_world.add_object(gameStart, 0)
 
     player = Player()
     # if gameStart.clicked:
