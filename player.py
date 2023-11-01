@@ -52,7 +52,9 @@ class Swim:
     @staticmethod
     def do(player):
         player.frame = (player.frame + 1) % 4
-        player.y += player.dir * 5
+        player.y += player.dir * 15
+        if player.y < 170 or player.y > 230:
+            player.y -= player.dir * 15
 
     @staticmethod
     def draw(player):
