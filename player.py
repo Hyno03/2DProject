@@ -122,7 +122,7 @@ class StateMachine:
 
 class Player:
     def __init__(self):
-        self.image = load_image('redplayeranimation.png')
+        self.image = load_image('Sprite/Player/redplayeranimation.png')
         self.x, self.y = 400, 200
         self.width, self.height = 24, 24
         self.frame = 0
