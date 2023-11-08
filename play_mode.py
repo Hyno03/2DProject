@@ -21,18 +21,18 @@ def handle_events():
 
 def init():
     global player
-    global frontwater
-    global backwater
+    global firstrail_frontwater
+    global firstrail_backwater
 
     player = Player()
     game_world.add_object(player, 1)
 
-    frontwater = Water(50)
-    game_world.add_object(frontwater,2)
+    firstrail_frontwater = Water(120)
+    game_world.add_object(firstrail_frontwater,2)
 
-    backwater = Water(100)
-    game_world.add_object(backwater,0)
-    pass
+    firstrail_backwater = Water(180)
+    game_world.add_object(firstrail_backwater,0)
+
 
 
 def finish():

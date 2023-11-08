@@ -1,4 +1,4 @@
-from pico2d import load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN
+from pico2d import load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_SPACE
 
 
 def upkey_down(e):
@@ -15,6 +15,12 @@ def downkey_down(e):
 
 def downkey_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
+
+def spacekey_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
+def spacekey_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_SPACE
 
 
 class Idle:
@@ -61,14 +67,38 @@ class Swim:
         player.image.clip_draw(0, player.frame * player.height + 72, player.width, player.height, player.x, player.y,
                                player.width * 4, player.height * 4)
 
+class AutoSwim:
+    @staticmethod
+    def enter(player, e):
+        if spacekey_down(e):
+            player.dir = 1
+
+
+    @staticmethod
+    def exit(player, e):
+        pass
+
+    @staticmethod
+    def do(player):
+        player.frame = (player.frame + 1) % 4
+        player.y += player.dir * 15
+        if player.y < 170 or player.y > 230:
+            player.y -= player.dir * 15
+
+    @staticmethod
+    def draw(player):
+        player.image.clip_draw(0, player.frame * player.height + 72, player.width, player.height, player.x, player.y,
+                               player.width * 4, player.height * 4)
+
 
 class StateMachine:
     def __init__(self, player):
         self.player = player
         self.cur_state = Idle
         self.transitions = {
-            Idle: {upkey_down: Swim, upkey_up: Swim, downkey_down: Swim, downkey_up: Swim},
-            Swim: {upkey_down: Idle, upkey_up: Idle, downkey_down: Idle, downkey_up: Idle}
+            Idle: {spacekey_down : AutoSwim},
+            Swim: {upkey_up: AutoSwim, downkey_up: AutoSwim},
+            AutoSwim: {spacekey_up: Swim, upkey_down: Swim, downkey_down: Swim}
         }
 
     def start(self):
