@@ -6,6 +6,7 @@ from player import Player
 import title_mode
 from water import Water
 
+
 def handle_events():
     global running
 
@@ -28,11 +29,10 @@ def init():
     game_world.add_object(player, 1)
 
     firstrail_frontwater = Water(120)
-    game_world.add_object(firstrail_frontwater,2)
+    game_world.add_object(firstrail_frontwater, 2)
 
     firstrail_backwater = Water(180)
-    game_world.add_object(firstrail_backwater,0)
-
+    game_world.add_object(firstrail_backwater, 0)
 
 
 def finish():

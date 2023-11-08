@@ -1,4 +1,4 @@
-from pico2d import load_image, clear_canvas, update_canvas, get_events,SDL_KEYDOWN, SDLK_ESCAPE, SDL_QUIT, SDLK_SPACE
+from pico2d import load_image, clear_canvas, update_canvas, get_events, SDL_KEYDOWN, SDLK_ESCAPE, SDL_QUIT, SDLK_SPACE
 
 import game_world
 import game_framework

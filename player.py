@@ -16,8 +16,10 @@ def downkey_down(e):
 def downkey_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
+
 def spacekey_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
 
 def spacekey_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_SPACE
@@ -67,12 +69,12 @@ class Swim:
         player.image.clip_draw(0, player.frame * player.height + 72, player.width, player.height, player.x, player.y,
                                player.width * 4, player.height * 4)
 
+
 class AutoSwim:
     @staticmethod
     def enter(player, e):
         if spacekey_down(e):
             player.dir = 1
-
 
     @staticmethod
     def exit(player, e):
@@ -96,7 +98,7 @@ class StateMachine:
         self.player = player
         self.cur_state = Idle
         self.transitions = {
-            Idle: {spacekey_down : AutoSwim},
+            Idle: {spacekey_down: AutoSwim},
             Swim: {upkey_up: AutoSwim, downkey_up: AutoSwim},
             AutoSwim: {spacekey_up: Swim, upkey_down: Swim, downkey_down: Swim}
         }
