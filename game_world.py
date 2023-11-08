@@ -1,4 +1,4 @@
-objects = [[], []]
+objects = [[], [], []]
 
 
 def add_object(o, depth=0):
@@ -23,3 +23,7 @@ def remove_object(o):
             layer.remove(o)
             return
     raise ValueError('Cannot delete non existing object')
+
+def clear():
+    for layer in objects:
+        layer.clear()

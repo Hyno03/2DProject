@@ -4,7 +4,7 @@ import game_world
 import game_framework
 from player import Player
 import title_mode
-
+from water import Water
 
 def handle_events():
     global running
@@ -21,9 +21,17 @@ def handle_events():
 
 def init():
     global player
+    global frontwater
+    global backwater
 
     player = Player()
-    game_world.add_object(player, 0)
+    game_world.add_object(player, 1)
+
+    frontwater = Water(50)
+    game_world.add_object(frontwater,2)
+
+    backwater = Water(100)
+    game_world.add_object(backwater,0)
     pass
 
 
