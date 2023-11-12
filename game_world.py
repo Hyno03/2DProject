@@ -1,4 +1,4 @@
-objects = [[], [], []]
+objects = [[], [], [], [], [], [], [], [], []]
 
 
 def add_object(o, depth=0):

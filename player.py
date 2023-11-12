@@ -1,4 +1,4 @@
-from pico2d import load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_SPACE
+from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_SPACE
 
 import game_framework
 
@@ -19,12 +19,8 @@ def downkey_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
 
-def spacekey_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
-
-
-def spacekey_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_SPACE
+def start_swimming(e):
+    return e[0] == 'Start_Swim'
 
 
 # Player Run Speed
@@ -45,6 +41,7 @@ class Idle:
     def enter(player, e):
         player.dir = 0
         player.frame = 0
+        player.ready_to_swim = get_time()
 
     @staticmethod
     def exit(player, e):
@@ -53,6 +50,8 @@ class Idle:
     @staticmethod
     def do(player):
         player.frame = (player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        if get_time() - player.ready_to_swim > 3:
+            player.statemachine.handle_event(('Start_Swim', 0))
 
     @staticmethod
     def draw(player):
@@ -89,8 +88,7 @@ class Swim:
 class AutoSwim:
     @staticmethod
     def enter(player, e):
-        if spacekey_down(e):
-            player.dir = 1
+        pass
 
     @staticmethod
     def exit(player, e):
@@ -112,7 +110,7 @@ class StateMachine:
         self.player = player
         self.cur_state = Idle
         self.transitions = {
-            Idle: {spacekey_down: AutoSwim},
+            Idle: {start_swimming: AutoSwim},
             Swim: {upkey_up: AutoSwim, downkey_up: AutoSwim},
             AutoSwim: {upkey_down: Swim, downkey_down: Swim}
         }
