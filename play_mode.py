@@ -6,8 +6,8 @@ from floor import Floor
 from item import Item
 from npc import NPC
 from player import Player
-import title_mode
 from water import Water
+import title_mode
 
 
 def handle_events():
@@ -38,9 +38,17 @@ def init():
     game_world.add_object(npc2, 1)
 
     item = Item()
-    game_world.add_object(item,7)
+    game_world.add_object(item, 7)
 
     background()
+    collide()
+
+
+def collide():
+    global player
+    global item
+
+    game_world.add_collision_pair('player:item', player, None)
 
 
 def background():
@@ -78,6 +86,7 @@ def finish():
 
 def update():
     game_world.update()
+    game_world.handle_collisions()
 
 
 def draw():

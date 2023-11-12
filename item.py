@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, draw_rectangle
 import random
 import game_framework
 import game_world
@@ -17,13 +17,15 @@ class Item:
         self.time = get_time()
         self.item_drop = False
         self.random_time = random.randint(1,10)
+        game_world.add_collision_pair('player:item', None, self)
 
     def draw(self):
         if self.item_drop == True:
             self.image.clip_draw(self.frame * self.w, 0, self.w, self.h, self.x, self.y, self.w * 3, self.h * 3)
+            draw_rectangle(*self.get_bb())
 
     def update(self):
-        if not self.item_drop and get_time() - self.time > self.random_time:
+        if not self.item_drop and get_time() - self.time > 1:
             self.item_drop = True
             new_item = Item()
             game_world.add_object(new_item, 7)
@@ -36,5 +38,12 @@ class Item:
             game_world.remove_object(self)
             self.x = 550
             self.item_drop = False
+
+    def get_bb(self):
+        return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+
+    def handle_collision(self, group, other):
+        if group == 'player:item':
+            game_world.remove_object(self)
 
 

@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_SPACE
+from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_SPACE, draw_rectangle
 
 import game_framework
 
@@ -149,6 +149,17 @@ class Player:
 
     def draw(self):
         self.statemachine.draw()
+        draw_rectangle(*self.get_bb())
 
     def update(self):
         self.statemachine.update()
+
+    def get_bb(self):
+        if self.statemachine.cur_state == Idle:
+            return self.x - 25, self.y - 50, self.x + 25, self.y + 50
+        else:
+            return self.x - 30, self.y - 25, self.x + 30, self.y + 25
+
+    def handle_collision(self, group, other):
+        if group == 'player:item':
+            pass
