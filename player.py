@@ -101,7 +101,7 @@ class AutoSwim:
     @staticmethod
     def draw(player):
         player.image.clip_draw(0, int(player.frame) * player.height + 72, player.width, player.height, player.x,
-                               player.y - 25,
+                               player.y,
                                player.width * 4, player.height * 4)
 
 
@@ -137,7 +137,7 @@ class StateMachine:
 class Player:
     def __init__(self):
         self.image = load_image('Sprite/Player/redplayeranimation.png')
-        self.x, self.y = 400, 200
+        self.x, self.y = 400, 180
         self.width, self.height = 24, 24
         self.frame = 0
         self.dir = 0

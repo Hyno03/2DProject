@@ -2,6 +2,7 @@ from pico2d import *
 
 import game_world
 import game_framework
+from npc import NPC
 from player import Player
 import title_mode
 from water import Water
@@ -22,12 +23,19 @@ def handle_events():
 
 def init():
     global player
+    global npc1
     global first_rail_front_water, first_rail_back_water
     global second_rail_front_water, second_rail_back_water
     global third_rail_front_water, third_rail_back_water
 
     player = Player()
     game_world.add_object(player, 7)
+
+    npc1 = NPC(300)
+    game_world.add_object(npc1, 4)
+
+    npc2 = NPC(420)
+    game_world.add_object(npc2, 1)
 
     #first rail
     first_rail_front_water = Water(0,120)
