@@ -2,6 +2,8 @@ from pico2d import *
 
 import game_world
 import game_framework
+from floor import Floor
+from item import Item
 from npc import NPC
 from player import Player
 import title_mode
@@ -24,9 +26,7 @@ def handle_events():
 def init():
     global player
     global npc1
-    global first_rail_front_water, first_rail_back_water
-    global second_rail_front_water, second_rail_back_water
-    global third_rail_front_water, third_rail_back_water
+    global item
 
     player = Player()
     game_world.add_object(player, 7)
@@ -37,26 +37,39 @@ def init():
     npc2 = NPC(420)
     game_world.add_object(npc2, 1)
 
-    #first rail
-    first_rail_front_water = Water(0,120)
+    item = Item()
+    game_world.add_object(item,7)
+
+    background()
+
+
+def background():
+    global front_floor, back_floor
+    global first_rail_front_water, first_rail_back_water
+    global second_rail_front_water, second_rail_back_water
+    global third_rail_front_water, third_rail_back_water
+
+    # first rail
+    first_rail_front_water = Water(0, 120)
     game_world.add_object(first_rail_front_water, 8)
-
-    first_rail_back_water = Water(50,180)
+    first_rail_back_water = Water(50, 180)
     game_world.add_object(first_rail_back_water, 6)
-
-    #second rail
+    # floor
+    front_floor = Floor(200, 50)
+    game_world.add_object(front_floor, 8)
+    back_floor = Floor(200, 500)
+    game_world.add_object(back_floor, 0)
+    # second rail
     second_rail_front_water = Water(0, 240)
     game_world.add_object(second_rail_front_water, 5)
-
     second_rail_back_water = Water(50, 300)
     game_world.add_object(second_rail_back_water, 3)
-
-    #third_rail
+    # third_rail
     second_rail_front_water = Water(0, 360)
     game_world.add_object(second_rail_front_water, 2)
-
     second_rail_back_water = Water(50, 420)
     game_world.add_object(second_rail_back_water, 0)
+
 
 def finish():
     game_world.clear()
