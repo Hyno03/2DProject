@@ -6,8 +6,10 @@ from floor import Floor
 from item import Item
 from npc import NPC
 from player import Player
+from swim_effect import Swim_Effect
 from water import Water
 import title_mode
+from water_background import Water_Background
 
 
 def handle_events():
@@ -53,30 +55,31 @@ def collide():
 
 def background():
     global front_floor, back_floor
-    global first_rail_front_water, first_rail_back_water
-    global second_rail_front_water, second_rail_back_water
-    global third_rail_front_water, third_rail_back_water
+    global first_rail_water
+    global second_rail_water
+    global third_rail_water
 
     # first rail
-    first_rail_front_water = Water(0, 120)
-    game_world.add_object(first_rail_front_water, 8)
-    first_rail_back_water = Water(50, 180)
-    game_world.add_object(first_rail_back_water, 6)
+    first_rail_water = Water(0, 120)
+    game_world.add_object(first_rail_water, 8)
+
+    #background water
+    water_background = Water_Background()
+    game_world.add_object(water_background, 0)
+
+    # second rail
+    second_rail_water = Water(0, 240)
+    game_world.add_object(second_rail_water, 5)
+
+    # third_rail
+    second_rail_water = Water(0, 360)
+    game_world.add_object(second_rail_water, 2)
+
     # floor
     front_floor = Floor(200, 50)
     game_world.add_object(front_floor, 8)
-    back_floor = Floor(200, 500)
+    back_floor = Floor(200, 530)
     game_world.add_object(back_floor, 0)
-    # second rail
-    second_rail_front_water = Water(0, 240)
-    game_world.add_object(second_rail_front_water, 5)
-    second_rail_back_water = Water(50, 300)
-    game_world.add_object(second_rail_back_water, 3)
-    # third_rail
-    second_rail_front_water = Water(0, 360)
-    game_world.add_object(second_rail_front_water, 2)
-    second_rail_back_water = Water(50, 420)
-    game_world.add_object(second_rail_back_water, 0)
 
 
 def finish():

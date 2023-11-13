@@ -1,6 +1,7 @@
 from pico2d import load_image, get_time
 
 import game_framework
+from swim_effect import Swim_Effect
 
 
 def start_swimming(e):
@@ -55,13 +56,14 @@ class AutoSwim:
     @staticmethod
     def do(npc):
         npc.frame = (npc.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        npc.swim_effect.update(npc.x - 20, npc.y + 90)
 
     @staticmethod
     def draw(npc):
         npc.image.clip_draw(0, int(npc.frame) * npc.height + 72, npc.width, npc.height, npc.x,
                                npc.y,
                                npc.width * 4, npc.height * 4)
-
+        npc.swim_effect.draw()
 
 class StateMachine:
     def __init__(self, npc):
@@ -100,6 +102,8 @@ class NPC:
         self.dir = 0
         self.statemachine = StateMachine(self)
         self.statemachine.start()
+        self.swim_effect = Swim_Effect(self.x - 20, self.y + 90)
+
 
     def handle_event(self, event):
         self.statemachine.handle_event(('INPUT', event))

@@ -1,6 +1,7 @@
 from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_SPACE, draw_rectangle
 
 import game_framework
+from swim_effect import Swim_Effect
 
 
 def upkey_down(e):
@@ -77,12 +78,14 @@ class Swim:
         player.y += player.dir * SWIM_SPEED_PPS * game_framework.frame_time
         # if player.y < 170 or player.y > 230:
         #     player.y -= player.dir * 15
+        player.swim_effect.update(player.x - 20, player.y + 90)
 
     @staticmethod
     def draw(player):
         player.image.clip_draw(0, int(player.frame) * player.height + 72, player.width, player.height, player.x,
                                player.y,
                                player.width * 4, player.height * 4)
+        player.swim_effect.draw()
 
 
 class AutoSwim:
@@ -97,13 +100,14 @@ class AutoSwim:
     @staticmethod
     def do(player):
         player.frame = (player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        player.swim_effect.update(player.x - 20, player.y + 90)
 
     @staticmethod
     def draw(player):
         player.image.clip_draw(0, int(player.frame) * player.height + 72, player.width, player.height, player.x,
                                player.y,
                                player.width * 4, player.height * 4)
-
+        player.swim_effect.draw()
 
 class StateMachine:
     def __init__(self, player):
@@ -143,6 +147,7 @@ class Player:
         self.dir = 0
         self.statemachine = StateMachine(self)
         self.statemachine.start()
+        self.swim_effect = Swim_Effect(self.x - 20, self.y + 90)
 
     def handle_event(self, event):
         self.statemachine.handle_event(('INPUT', event))
