@@ -8,7 +8,7 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 1
 
 class Swim_Effect:
-    def __init__(self, x = 0 , y = 0):
+    def __init__(self, x = 0, y = 0):
         self.image = load_image('Sprite/Background/3.png')
         self.x, self.y = x, y
         self.w, self.h = 48, 48

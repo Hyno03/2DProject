@@ -9,6 +9,7 @@ class Floor:
     def draw(self):
         self.image.draw(self.x, self.y, 400, 100)
         self.image.draw(self.x + 400, self.y, 400, 100)
+        self.image.draw(self.x + 800, self.y, 400, 100)
 
 
     def update(self):

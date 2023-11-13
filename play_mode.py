@@ -3,13 +3,12 @@ from pico2d import *
 import game_world
 import game_framework
 from floor import Floor
-from item import Item
+from item import Item, Obstacle
 from npc import NPC
 from player import Player
 from swim_effect import Swim_Effect
-from water import Water
+from water import Water, Water_Background
 import title_mode
-from water_background import Water_Background
 
 
 def handle_events():
@@ -29,18 +28,22 @@ def init():
     global player
     global npc1
     global item
+    global box
 
     player = Player()
-    game_world.add_object(player, 7)
+    game_world.add_object(player, 1)
 
-    npc1 = NPC(300)
-    game_world.add_object(npc1, 4)
+    npc1 = NPC(320)
+    game_world.add_object(npc1, 1)
 
-    npc2 = NPC(420)
+    npc2 = NPC(490)
     game_world.add_object(npc2, 1)
 
     item = Item()
-    game_world.add_object(item, 7)
+    game_world.add_object(item, 1)
+
+    # box = Obstacle()
+    # game_world.add_object(box, 1)
 
     background()
     collide()
@@ -49,36 +52,33 @@ def init():
 def collide():
     global player
     global item
+    global box
 
     game_world.add_collision_pair('player:item', player, None)
+    game_world.add_collision_pair('player:box', player, None)
 
 
 def background():
-    global front_floor, back_floor
-    global first_rail_water
-    global second_rail_water
-    global third_rail_water
-
-    # first rail
-    first_rail_water = Water(0, 120)
-    game_world.add_object(first_rail_water, 8)
-
     #background water
     water_background = Water_Background()
     game_world.add_object(water_background, 0)
 
+    # first rail
+    first_rail_water = Water(0, 100)
+    game_world.add_object(first_rail_water, 2)
+
     # second rail
-    second_rail_water = Water(0, 240)
-    game_world.add_object(second_rail_water, 5)
+    second_rail_water = Water(0, 270)
+    game_world.add_object(second_rail_water, 2)
 
     # third_rail
-    second_rail_water = Water(0, 360)
+    second_rail_water = Water(0, 440)
     game_world.add_object(second_rail_water, 2)
 
     # floor
-    front_floor = Floor(200, 50)
-    game_world.add_object(front_floor, 8)
-    back_floor = Floor(200, 530)
+    front_floor = Floor(200, 20)
+    game_world.add_object(front_floor, 0)
+    back_floor = Floor(200, 580)
     game_world.add_object(back_floor, 0)
 
 
