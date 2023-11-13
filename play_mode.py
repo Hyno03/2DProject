@@ -42,10 +42,10 @@ def init():
     item = Item()
     game_world.add_object(item, 1)
 
-    # box = Obstacle()
-    # game_world.add_object(box, 1)
+    box = Obstacle()
+    game_world.add_object(box, 1)
 
-    background()
+    # background()
     collide()
 
 

@@ -168,3 +168,5 @@ class Player:
     def handle_collision(self, group, other):
         if group == 'player:item':
             pass
+        if group == 'player:box':
+            pass
