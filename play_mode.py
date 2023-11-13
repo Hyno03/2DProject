@@ -2,11 +2,11 @@ from pico2d import *
 
 import game_world
 import game_framework
+from countdown import Countdown
 from floor import Floor
 from item import Item, Obstacle
 from npc import NPC
 from player import Player
-from swim_effect import Swim_Effect
 from water import Water, Water_Background
 import title_mode
 
@@ -25,27 +25,14 @@ def handle_events():
 
 
 def init():
-    global player
-    global npc1
-    global item
-    global box
+    global countdown
 
-    player = Player()
-    game_world.add_object(player, 1)
+    countdown = Countdown()
+    game_world.add_object(countdown,3)
 
-    npc1 = NPC(320)
-    game_world.add_object(npc1, 1)
-
-    npc2 = NPC(490)
-    game_world.add_object(npc2, 1)
-
-    item = Item()
-    game_world.add_object(item, 1)
-
-    box = Obstacle()
-    game_world.add_object(box, 1)
-
-    # background()
+    swimmer()
+    items()
+    background()
     collide()
 
 
@@ -56,6 +43,29 @@ def collide():
 
     game_world.add_collision_pair('player:item', player, None)
     game_world.add_collision_pair('player:box', player, None)
+
+
+def items():
+    global item
+    global box
+    item = Item()
+    game_world.add_object(item, 1)
+    box = Obstacle()
+    game_world.add_object(box, 1)
+
+
+def swimmer():
+    global player
+    global npc1
+
+    player = Player()
+    game_world.add_object(player, 1)
+
+    npc1 = NPC(320)
+    game_world.add_object(npc1, 1)
+
+    npc2 = NPC(490)
+    game_world.add_object(npc2, 1)
 
 
 def background():
@@ -78,7 +88,7 @@ def background():
     # floor
     front_floor = Floor(200, 20)
     game_world.add_object(front_floor, 0)
-    back_floor = Floor(200, 580)
+    back_floor = Floor(200, 600)
     game_world.add_object(back_floor, 0)
 
 

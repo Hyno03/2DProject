@@ -1,4 +1,4 @@
-objects = [[], [], []]
+objects = [[], [], [], []]
 
 collision_pairs = {}
 
