@@ -3,7 +3,6 @@ from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_D
 import game_framework
 from swim_effect import Swim_Effect
 
-
 def upkey_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
 
@@ -25,7 +24,7 @@ def start_swimming(e):
 
 
 # Player Run Speed
-PIXEL_PER_METER = (10.0 / 0.2)  # 10 pixel 20 cm
+PIXEL_PER_METER = (15.0 / 0.01)  # 10 pixel 20 cm
 SWIM_SPEED_KMPH = 30.0  # Km / Hour
 SWIM_SPEED_MPM = (SWIM_SPEED_KMPH * 1000.0 / 60.0)
 SWIM_SPEED_MPS = (SWIM_SPEED_MPM / 60.0)
@@ -65,8 +64,10 @@ class Swim:
     def enter(player, e):
         if upkey_down(e) or downkey_up(e):
             player.dir = 1
+            player.is_move_once = True
         elif upkey_up(e) or downkey_down(e):
             player.dir = -1
+            player.is_move_once = True
 
     @staticmethod
     def exit(player, e):
@@ -75,9 +76,11 @@ class Swim:
     @staticmethod
     def do(player):
         player.frame = (player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
-        player.y += player.dir * SWIM_SPEED_PPS * game_framework.frame_time
-        # if player.y < 170 or player.y > 230:
-        #     player.y -= player.dir * 15
+        if player.is_move_once:
+            player.y += player.dir * SWIM_SPEED_PPS * game_framework.frame_time
+            player.is_move_once = False
+        if player.y < 90 or player.y > 250:
+            player.y -= player.dir * SWIM_SPEED_PPS * game_framework.frame_time
         player.swim_effect.update(player.x - 20, player.y + 90)
 
     @staticmethod
@@ -148,6 +151,8 @@ class Player:
         self.statemachine = StateMachine(self)
         self.statemachine.start()
         self.swim_effect = Swim_Effect(self.x - 20, self.y + 90)
+        self.item_gauge = 0
+        # self.is_move_once = False
 
     def handle_event(self, event):
         self.statemachine.handle_event(('INPUT', event))
@@ -158,15 +163,16 @@ class Player:
 
     def update(self):
         self.statemachine.update()
+        print(self.item_gauge)
 
     def get_bb(self):
         if self.statemachine.cur_state == Idle:
             return self.x - 25, self.y - 50, self.x + 25, self.y + 50
         else:
-            return self.x - 30, self.y - 25, self.x + 30, self.y + 25
+            return self.x - 30, self.y - 20, self.x + 30, self.y + 20
 
     def handle_collision(self, group, other):
         if group == 'player:item':
-            pass
+            self.item_gauge += 1
         if group == 'player:box':
             pass
