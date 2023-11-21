@@ -11,7 +11,7 @@ FRAMES_PER_ACTION = 8
 class Item:
     def __init__(self):
         self.image = load_image('Sprite/Item/item.png')
-        self.x, self.y = 900, 150
+        self.x, self.y = 900, 155
         self.w, self.h = 16, 16
         self.frame = 0
         self.time = get_time()
@@ -21,7 +21,7 @@ class Item:
 
     def draw(self):
         if self.item_drop:
-            self.image.clip_draw(self.frame * self.w, 0, self.w, self.h, self.x, self.y, self.w * 3, self.h * 3)
+            self.image.clip_draw(self.frame * self.w, 0, self.w, self.h, self.x, self.y, self.w * 2.5, self.h * 2.5)
             draw_rectangle(*self.get_bb())
 
     def update(self):
@@ -30,6 +30,7 @@ class Item:
             new_item = Item()
             game_world.add_object(new_item, 1)
             self.random_time = random.randint(1,5)
+            self.y = random.choice([100, 155, 210])
             self.time = get_time()
 
         if self.item_drop:
@@ -40,7 +41,7 @@ class Item:
             self.item_drop = False
 
     def get_bb(self):
-        return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
 
     def handle_collision(self, group, other):
         if group == 'player:item':
@@ -50,7 +51,7 @@ class Item:
 class Obstacle:
     def __init__(self):
         self.image = load_image('Sprite/Item/Box1.png')
-        self.x, self.y = 900, 150
+        self.x, self.y = 900, 165
         self.w, self.h = 32, 32
         self.frame = 0
         self.time = get_time()
@@ -69,6 +70,7 @@ class Obstacle:
             new_obstacle = Obstacle()
             game_world.add_object(new_obstacle, 1)
             self.random_time = random.randint(1,5)
+            self.y = random.choice([110,165,220])
             self.time = get_time()
 
         if self.obstacle_drop:
@@ -79,7 +81,7 @@ class Obstacle:
             self.obstacle_drop = False
 
     def get_bb(self):
-        return self.x - 30, self.y - 20, self.x + 30, self.y + 0
+        return self.x - 15, self.y - 20, self.x + 15, self.y + 0
 
     def handle_collision(self, group, other):
         if group == 'player:box':
