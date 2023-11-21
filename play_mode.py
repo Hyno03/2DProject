@@ -61,35 +61,45 @@ def swimmer():
     player = Player()
     game_world.add_object(player, 1)
 
-    npc1 = NPC(320)
+    npc1 = NPC(350)
     game_world.add_object(npc1, 1)
 
-    npc2 = NPC(490)
+    npc2 = NPC(520)
     game_world.add_object(npc2, 1)
 
 
 def background():
-    #background water
-    water_background = Water_Background()
-    game_world.add_object(water_background, 0)
+    #background water 1
+    water_background1 = Water_Background(500)
+    game_world.add_object(water_background1, 0)
 
-    # first rail
-    first_rail_water = Water(0, 100)
-    game_world.add_object(first_rail_water, 2)
 
-    # second rail
-    second_rail_water = Water(0, 270)
-    game_world.add_object(second_rail_water, 2)
+    #background water 2
+    water_background2 = Water_Background(310)
+    game_world.add_object(water_background2, 0)
 
-    # third_rail
-    second_rail_water = Water(0, 440)
-    game_world.add_object(second_rail_water, 2)
+    #
+    #background water 3
+    water_background3 = Water_Background(130)
+    game_world.add_object(water_background3, 0)
+
+    # # first rail
+    # first_rail_water = Water(0, 100)
+    # game_world.add_object(first_rail_water, 2)
+    #
+    # # second rail
+    # second_rail_water = Water(0, 300)
+    # game_world.add_object(second_rail_water, 2)
+    #
+    # # third_rail
+    # second_rail_water = Water(0, 470)
+    # game_world.add_object(second_rail_water, 2)
 
     # floor
     front_floor = Floor(200, 20)
     game_world.add_object(front_floor, 0)
-    back_floor = Floor(200, 600)
-    game_world.add_object(back_floor, 0)
+    # back_floor = Floor(200, 650)
+    # game_world.add_object(back_floor, 0)
 
 
 def finish():

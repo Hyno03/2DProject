@@ -26,12 +26,17 @@ class Water:
             self.x = self.left_screen
 
 class Water_Background:
-    def __init__(self):
-        self.image = load_image('Sprite/Background/wave.png')
-        self.x, self.y = 500, 300
+    def __init__(self, y = 0):
+        self.image = load_image('Sprite/Background/water.png')
+        self.x, self.y = 500, y
+        self.w, self.h = 640, 128
+        self.left_screen = 600
 
     def draw(self):
-        self.image.draw(self.x, self.y, 1000, 1000)
+        self.image.draw(self.x, self.y, self.w*2, self.h*2)
+        self.image.draw(self.x + 1200, self.y, self.w*2, self.h*2)
 
     def update(self):
-        pass
+        self.x -= ACTION_PER_TIME * FRAMES_PER_ACTION * game_framework.frame_time
+        if self.x < -self.left_screen:
+            self.x = self.left_screen
