@@ -1,7 +1,10 @@
-from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_SPACE, draw_rectangle
+from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, \
+    draw_rectangle
 
 import game_framework
 from swim_effect import Swim_Effect
+from water import Water_Background
+
 
 def upkey_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
@@ -19,21 +22,41 @@ def downkey_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
 
+def leftkey_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
+
+
+def leftkey_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
+
+
+def rightkey_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
+
+
+def rightkey_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
+
+
+def spacekey_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
+
 def start_swimming(e):
     return e[0] == 'Start_Swim'
 
 
 # Player Run Speed
-PIXEL_PER_METER = (15.0 / 0.01)  # 10 pixel 20 cm
+PIXEL_PER_METER = (15.0 / 0.01)  # 15 pixel 1 cm
 SWIM_SPEED_KMPH = 30.0  # Km / Hour
 SWIM_SPEED_MPM = (SWIM_SPEED_KMPH * 1000.0 / 60.0)
 SWIM_SPEED_MPS = (SWIM_SPEED_MPM / 60.0)
 SWIM_SPEED_PPS = (SWIM_SPEED_MPS * PIXEL_PER_METER)
 
 # Player Action Speed
-TIME_PER_ACTION = 0.5
-ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 4
+PLAYER_TIME_PER_ACTION = 0.5
+PLAYER_ACTION_PER_TIME = 1.0 / PLAYER_TIME_PER_ACTION
+PLAYER_FRAMES_PER_ACTION = 4
 
 
 class Idle:
@@ -49,7 +72,7 @@ class Idle:
 
     @staticmethod
     def do(player):
-        player.frame = (player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        player.frame = (player.frame + PLAYER_FRAMES_PER_ACTION * PLAYER_ACTION_PER_TIME * game_framework.frame_time) % 3
         if get_time() - player.ready_to_swim > 3:
             player.statemachine.handle_event(('Start_Swim', 0))
 
@@ -75,7 +98,7 @@ class Swim:
 
     @staticmethod
     def do(player):
-        player.frame = (player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        player.frame = (player.frame + PLAYER_FRAMES_PER_ACTION * PLAYER_ACTION_PER_TIME * game_framework.frame_time) % 4
         if player.is_move_once:
             player.y += player.dir * SWIM_SPEED_PPS * game_framework.frame_time
             player.is_move_once = False
@@ -90,6 +113,32 @@ class Swim:
                                player.width * 4, player.height * 4)
         player.swim_effect.draw()
 
+#
+# class Swim_Fast:
+#     @staticmethod
+#     def enter(player, e):
+#         pass
+#
+#     @staticmethod
+#     def exit(player, e):
+#         pass
+#
+#     @staticmethod
+#     def do(player):
+#         player.frame = (player.frame + PLAYER_FRAMES_PER_ACTION * PLAYER_ACTION_PER_TIME * game_framework.frame_time) % 4
+#         player.swim_effect.update(player.x - 20, player.y + 90)
+#         player.water_background.action_per_time -= 0.01
+#
+#         player.water_background.update()
+#
+#     @staticmethod
+#     def draw(player):
+#         player.image.clip_draw(0, int(player.frame) * player.height + 72, player.width, player.height, player.x,
+#                                player.y,
+#                                player.width * 4, player.height * 4)
+#         player.swim_effect.draw()
+#         player.water_background.draw()
+
 
 class AutoSwim:
     @staticmethod
@@ -102,7 +151,7 @@ class AutoSwim:
 
     @staticmethod
     def do(player):
-        player.frame = (player.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        player.frame = (player.frame + PLAYER_FRAMES_PER_ACTION * PLAYER_ACTION_PER_TIME * game_framework.frame_time) % 4
         player.swim_effect.update(player.x - 20, player.y + 90)
 
     @staticmethod
@@ -111,6 +160,7 @@ class AutoSwim:
                                player.y,
                                player.width * 4, player.height * 4)
         player.swim_effect.draw()
+
 
 class StateMachine:
     def __init__(self, player):
@@ -137,6 +187,7 @@ class StateMachine:
                 return True
         return False
 
+
     def draw(self):
         self.cur_state.draw(self.player)
 
@@ -152,7 +203,8 @@ class Player:
         self.statemachine.start()
         self.swim_effect = Swim_Effect(self.x - 20, self.y + 90)
         self.item_gauge = 0
-        # self.is_move_once = False
+        self.is_move_once = False
+        self.water_background = Water_Background(130)
 
     def handle_event(self, event):
         self.statemachine.handle_event(('INPUT', event))
@@ -164,6 +216,7 @@ class Player:
     def update(self):
         self.statemachine.update()
         print(self.item_gauge)
+
 
     def get_bb(self):
         if self.statemachine.cur_state == Idle:

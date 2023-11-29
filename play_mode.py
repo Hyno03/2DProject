@@ -7,19 +7,27 @@ from floor import Floor
 from item import Item, Obstacle
 from npc import NPC
 from player import Player
-from water import Water, Water_Background
+from water import Water_Background
 import title_mode
 
 
 def handle_events():
     global running
+    global swim_fast_time
 
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_mode(title_mode)
+        elif event.type == SDL_KEYDOWN:
+            if event.key == SDLK_ESCAPE:
+                game_framework.change_mode(title_mode)
+            elif event.key == (SDLK_LEFT or SDLK_RIGHT):
+                water_background1.action_per_time += 1
+                swim_fast_time = get_time()
+        elif event.type == SDL_KEYUP:
+            if event.key == (SDLK_LEFT or SDLK_RIGHT) and get_time() - swim_fast_time > 1:
+                water_background1.action_per_time = 8
         else:
             player.handle_event(event)
 
@@ -69,6 +77,7 @@ def swimmer():
 
 
 def background():
+    global water_background1
     #background water 1
     water_background1 = Water_Background(500)
     game_world.add_object(water_background1, 0)
@@ -82,18 +91,6 @@ def background():
     #background water 3
     water_background3 = Water_Background(130)
     game_world.add_object(water_background3, 0)
-
-    # # first rail
-    # first_rail_water = Water(0, 100)
-    # game_world.add_object(first_rail_water, 2)
-    #
-    # # second rail
-    # second_rail_water = Water(0, 300)
-    # game_world.add_object(second_rail_water, 2)
-    #
-    # # third_rail
-    # second_rail_water = Water(0, 470)
-    # game_world.add_object(second_rail_water, 2)
 
     # floor
     front_floor = Floor(200, 20)
