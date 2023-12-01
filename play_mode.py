@@ -7,7 +7,7 @@ from floor import Floor
 from item import Item, Obstacle
 from npc import NPC
 from player import Player
-from water import Water_Background
+from water import Water_Background, Line
 import title_mode
 
 
@@ -87,6 +87,12 @@ def background():
     # floor
     front_floor = Floor(200, 20)
     game_world.add_object(front_floor, 0)
+
+    #line
+    line1 = Line(257)
+    game_world.add_object(line1, 1)
+    line2 = Line(437)
+    game_world.add_object(line2, 1)
 
 
 def finish():

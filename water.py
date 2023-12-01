@@ -25,4 +25,18 @@ class Water_Background:
         if get_time() - self.time > 1:
             self.frames_per_action = 8
 
+class Line:
+    def __init__(self, y = 0):
+        self.image = load_image('Sprite/Background/line.png')
+        self.x, self.y = 100, y
+        self.w, self.h = self.image.w, self.image.h
 
+    def draw(self):
+        self.image.draw(self.x, self.y, self.w * 4, self.h * 4)
+        self.image.draw(self.x + 220, self.y, self.w * 4, self.h * 4)
+        self.image.draw(self.x + 450, self.y, self.w * 4, self.h * 4)
+        self.image.draw(self.x + 650, self.y, self.w * 4, self.h * 4)
+        self.image.draw(self.x + 800, self.y, self.w * 4, self.h * 4)
+
+    def update(self):
+        pass
