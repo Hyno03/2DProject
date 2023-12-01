@@ -24,3 +24,5 @@ class Water_Background:
             self.x = self.left_screen
         if get_time() - self.time > 1:
             self.frames_per_action = 8
+
+
