@@ -13,7 +13,7 @@ import title_mode
 
 def handle_events():
     global running
-    global swim_fast_time
+    global water_backgrounds
 
     events = get_events()
     for event in events:
@@ -22,12 +22,10 @@ def handle_events():
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 game_framework.change_mode(title_mode)
-            elif event.key == (SDLK_LEFT or SDLK_RIGHT):
-                water_background1.action_per_time += 1
-                swim_fast_time = get_time()
-        elif event.type == SDL_KEYUP:
-            if event.key == (SDLK_LEFT or SDLK_RIGHT) and get_time() - swim_fast_time > 1:
-                water_background1.action_per_time = 8
+            elif event.key == SDLK_LEFT or event.key == SDLK_RIGHT:
+                for water_background in water_backgrounds:
+                    water_background.frames_per_action = 24
+                    water_background.time = get_time()
         else:
             player.handle_event(event)
 
@@ -77,26 +75,18 @@ def swimmer():
 
 
 def background():
-    global water_background1
-    #background water 1
-    water_background1 = Water_Background(500)
-    game_world.add_object(water_background1, 0)
+    global water_backgrounds
 
-
-    #background water 2
-    water_background2 = Water_Background(310)
-    game_world.add_object(water_background2, 0)
-
-    #
-    #background water 3
-    water_background3 = Water_Background(130)
-    game_world.add_object(water_background3, 0)
+    water_backgrounds = []
+    positions = [500,310,130]
+    for position in positions:
+        water_background = Water_Background(position)
+        game_world.add_object(water_background, 0)
+        water_backgrounds.append(water_background)
 
     # floor
     front_floor = Floor(200, 20)
     game_world.add_object(front_floor, 0)
-    # back_floor = Floor(200, 650)
-    # game_world.add_object(back_floor, 0)
 
 
 def finish():
