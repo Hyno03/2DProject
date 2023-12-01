@@ -94,7 +94,8 @@ class Swim:
 
     @staticmethod
     def exit(player, e):
-        pass
+        if spacekey_down(e):
+            player.booster()
 
     @staticmethod
     def do(player):
@@ -109,35 +110,8 @@ class Swim:
     @staticmethod
     def draw(player):
         player.image.clip_draw(0, int(player.frame) * player.height + 72, player.width, player.height, player.x,
-                               player.y,
-                               player.width * 4, player.height * 4)
+                               player.y, player.width * 4, player.height * 4)
         player.swim_effect.draw()
-
-#
-# class Swim_Fast:
-#     @staticmethod
-#     def enter(player, e):
-#         pass
-#
-#     @staticmethod
-#     def exit(player, e):
-#         pass
-#
-#     @staticmethod
-#     def do(player):
-#         player.frame = (player.frame + PLAYER_FRAMES_PER_ACTION * PLAYER_ACTION_PER_TIME * game_framework.frame_time) % 4
-#         player.swim_effect.update(player.x - 20, player.y + 90)
-#         player.water_background.action_per_time -= 0.01
-#
-#         player.water_background.update()
-#
-#     @staticmethod
-#     def draw(player):
-#         player.image.clip_draw(0, int(player.frame) * player.height + 72, player.width, player.height, player.x,
-#                                player.y,
-#                                player.width * 4, player.height * 4)
-#         player.swim_effect.draw()
-#         player.water_background.draw()
 
 
 class AutoSwim:
@@ -147,7 +121,8 @@ class AutoSwim:
 
     @staticmethod
     def exit(player, e):
-        pass
+        if spacekey_down(e):
+            player.booster()
 
     @staticmethod
     def do(player):
@@ -168,8 +143,8 @@ class StateMachine:
         self.cur_state = Idle
         self.transitions = {
             Idle: {start_swimming: AutoSwim},
-            Swim: {upkey_up: AutoSwim, downkey_up: AutoSwim},
-            AutoSwim: {upkey_down: Swim, downkey_down: Swim}
+            Swim: {upkey_up: AutoSwim, downkey_up: AutoSwim, spacekey_down: Swim},
+            AutoSwim: {upkey_down: Swim, downkey_down: Swim, spacekey_down: AutoSwim}
         }
 
     def start(self):
@@ -217,6 +192,9 @@ class Player:
         self.statemachine.update()
         print(self.item_gauge)
 
+    def booster(self):
+        if self.item_gauge >= 5:
+            pass
 
     def get_bb(self):
         if self.statemachine.cur_state == Idle:
