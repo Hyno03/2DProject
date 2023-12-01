@@ -3,7 +3,7 @@ from pico2d import load_image, clear_canvas, update_canvas, get_events, SDL_KEYD
 import game_world
 import game_framework
 import play_mode
-from floor import Floor
+from floor import White_Floor
 from play_button import PlayButton
 from water import Water_Background
 
@@ -21,13 +21,14 @@ def init():
 
 
 def gray_background():
-    floor = Floor(0, 250)
+
+    floor = White_Floor(0, 250)
     game_world.add_object(floor, 0)
-    floor = Floor(0, 350)
+    floor = White_Floor(0, 350)
     game_world.add_object(floor, 0)
-    floor = Floor(0, 450)
+    floor = White_Floor(0, 450)
     game_world.add_object(floor, 0)
-    floor = Floor(0, 550)
+    floor = White_Floor(0, 550)
     game_world.add_object(floor, 0)
 
 

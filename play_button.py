@@ -13,7 +13,7 @@ class PlayButton:
 
     def draw(self):
         self.image.draw(self.x, self.y, self.w, self.h)
-        self.font.draw(120, self.y + 250, f'Swimming Game', (255, 255, 255))
+        self.font.draw(120, self.y + 250, f'Swimming Game', (0, 0, 0))
 
     def update(self):
         if self.clicked == True:
