@@ -9,11 +9,11 @@ class PlayButton:
         self.x, self.y = 500, 150
         self.w, self.h = 435 / 3, 120 / 3
         self.clicked = False
-        self.font = load_font('ENCR10B.TTF', 100)
+        self.font = load_font('neodgm.ttf', 100)
 
     def draw(self):
         self.image.draw(self.x, self.y, self.w, self.h)
-        self.font.draw(120, self.y + 250, f'Swimming Game', (0, 0, 0))
+        self.font.draw(190, self.y + 250, f'Swimming Game', (0, 0, 0))
 
     def update(self):
         if self.clicked == True:
