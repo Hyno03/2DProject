@@ -22,9 +22,13 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_mode(title_mode)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            for water_background in water_backgrounds:
-                water_background.frames_per_action = 24
-                water_background.time = get_time()
+            if player.item_gauge >= 5:
+                for water_background in water_backgrounds:
+                    water_background.frames_per_action = 24
+                    water_background.time = get_time()
+                player.item_gauge = 0
+                player.swim_effect.frames_per_action = 8
+                player.swim_effect.time = get_time()
         else:
             player.handle_event(event)
 

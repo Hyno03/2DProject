@@ -5,6 +5,6 @@ import play_mode
 import title_mode
 
 open_canvas(1000,600)
-game_framework.run(title_mode)
+game_framework.run(play_mode)
 delay(0.1)
 close_canvas()
