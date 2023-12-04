@@ -95,7 +95,7 @@ class StateMachine:
 
 class NPC:
     def __init__(self, y):
-        self.image = load_image('Sprite/Player/redplayeranimation.png')
+        self.image = load_image('Sprite/Player/blackplayeranimation.png')
         self.x, self.y = 100, y
         self.width, self.height = 24, 24
         self.frame = 0

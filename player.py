@@ -3,7 +3,6 @@ from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_D
 
 import game_framework
 from swim_effect import Swim_Effect
-from water import Water_Background
 
 
 def upkey_down(e):
@@ -23,7 +22,7 @@ def downkey_up(e):
 
 
 def leftkey_down(e):
-    return e and e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
 
 
 def leftkey_up(e):
@@ -31,23 +30,15 @@ def leftkey_up(e):
 
 
 def rightkey_down(e):
-    return e and e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
 
 
 def rightkey_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
 
 
-def spacekey_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
-
-
 def start_swimming(e):
     return e[0] == 'Start_Swim'
-
-
-def back_to_normal(e):
-    return e[0] == 'Back_to_Swim'
 
 
 # Player Run Speed
@@ -116,9 +107,11 @@ class Swim_updown:
 class Swim_leftright:
     @staticmethod
     def enter(player, e):
-        player.speed = SWIM_SPEED_PPS
-        player.key_pressed = {'left': False, 'right': False}
-
+        player.speed = SWIM_SPEED_PPS * 2
+        if leftkey_down(e) or rightkey_down(e):
+            player.dir = 1
+            player.move_once = True
+        player.swim_time = get_time()
 
     @staticmethod
     def exit(player, e):
@@ -127,21 +120,11 @@ class Swim_leftright:
     @staticmethod
     def do(player):
         player.frame = (player.frame + PLAYER_FRAMES_PER_ACTION * PLAYER_ACTION_PER_TIME * game_framework.frame_time) % 4
-        left_key_pressed = leftkey_down(None)
-        right_key_pressed = rightkey_down(None)
-
-        if left_key_pressed and not player.key_pressed['left']:
-            player.key_pressed['left'] = True
-            print('left')
-        elif right_key_pressed and not player.key_pressed['right']:
-            player.key_pressed['right'] = True
-            print('right')
-        if (player.key_pressed['left'] and player.key_pressed['right']) and (left_key_pressed or right_key_pressed):
-            player.dir = 1
+        if player.move_once:
             player.x += player.dir * player.speed * game_framework.frame_time
-            player.key_pressed['left'] = False
-            player.key_pressed['right'] = False
-            print('no')
+            player.move_once = False
+        if get_time() - player.swim_time > 2:
+            player.dir = -1
         player.x = clamp(100, player.x, 510)
         player.swim_effect.update(player.x - 20, player.y + 90)
 
@@ -180,9 +163,9 @@ class StateMachine:
         self.cur_state = Idle
         self.transitions = {
             Idle: {start_swimming: AutoSwim},
-            Swim_updown: {upkey_up: AutoSwim, downkey_up: AutoSwim, leftkey_down: Swim_leftright, rightkey_down: Swim_leftright, spacekey_down: Swim_updown},
-            Swim_leftright: {upkey_down: Swim_updown, downkey_down: Swim_updown, leftkey_up: AutoSwim, rightkey_up: AutoSwim, spacekey_down: Swim_leftright},
-            AutoSwim: {upkey_down: Swim_updown, downkey_down: Swim_updown, leftkey_down: Swim_leftright, rightkey_down: Swim_leftright, spacekey_down: AutoSwim}
+            Swim_updown: {upkey_up: AutoSwim, downkey_up: AutoSwim, leftkey_down: Swim_leftright, rightkey_down: Swim_leftright},
+            Swim_leftright: {upkey_down: Swim_updown, downkey_down: Swim_updown, leftkey_up: AutoSwim, rightkey_up: AutoSwim},
+            AutoSwim: {upkey_down: Swim_updown, downkey_down: Swim_updown, leftkey_down: Swim_leftright, rightkey_down: Swim_leftright}
         }
 
     def start(self):
@@ -215,7 +198,7 @@ class Player:
         self.statemachine.start()
         self.swim_effect = Swim_Effect(self.x - 20, self.y + 90)
         self.item_gauge = 5
-        self.keydown_continuous = False
+        self.move_once = False
 
     def handle_event(self, event):
         self.statemachine.handle_event(('INPUT', event))
@@ -226,7 +209,7 @@ class Player:
 
     def update(self):
         self.statemachine.update()
-        print(self.item_gauge)
+        # print(self.item_gauge)
 
     def get_bb(self):
         if self.statemachine.cur_state == Idle:

@@ -3,6 +3,7 @@ from pico2d import *
 import character_select_mode
 import game_world
 import game_framework
+import title_mode
 from countdown import Countdown
 from floor import Floor
 from item import Item, Obstacle
@@ -17,7 +18,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_mode(character_select_mode)
+            game_framework.change_mode(title_mode)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             if player.item_gauge >= 5:
                 for water_background in water_backgrounds:
@@ -37,8 +38,8 @@ def init():
     game_world.add_object(countdown, 3)
 
     background()
-    swimmer()
     items()
+    swimmer()
     collide()
 
 
