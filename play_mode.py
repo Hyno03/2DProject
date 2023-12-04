@@ -7,25 +7,24 @@ from floor import Floor
 from item import Item, Obstacle
 from npc import NPC
 from player import Player
+from swim_effect import Swim_Effect
 from water import Water_Background, Line
 import title_mode
 
 
 def handle_events():
     global running
-    global water_backgrounds
 
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN:
-            if event.key == SDLK_ESCAPE:
-                game_framework.change_mode(title_mode)
-            elif event.key == SDLK_LEFT or event.key == SDLK_RIGHT:
-                for water_background in water_backgrounds:
-                    water_background.frames_per_action = 24
-                    water_background.time = get_time()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            game_framework.change_mode(title_mode)
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            for water_background in water_backgrounds:
+                water_background.frames_per_action = 24
+                water_background.time = get_time()
         else:
             player.handle_event(event)
 
@@ -36,9 +35,9 @@ def init():
     countdown = Countdown()
     game_world.add_object(countdown,3)
 
+    background()
     swimmer()
     items()
-    background()
     collide()
 
 
@@ -86,7 +85,7 @@ def background():
 
     # floor
     front_floor = Floor(200, 20)
-    game_world.add_object(front_floor, 0)
+    game_world.add_object(front_floor, 3)
 
     #line
     line1 = Line(257)

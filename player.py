@@ -1,5 +1,5 @@
 from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, \
-    draw_rectangle
+    draw_rectangle, clamp
 
 import game_framework
 from swim_effect import Swim_Effect
@@ -26,16 +26,8 @@ def leftkey_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
 
 
-def leftkey_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
-
-
 def rightkey_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
-
-
-def rightkey_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
 
 
 def spacekey_down(e):
@@ -44,6 +36,9 @@ def spacekey_down(e):
 
 def start_swimming(e):
     return e[0] == 'Start_Swim'
+
+def back_to_normal(e):
+    return e[0] == 'Back_to_Swim'
 
 
 # Player Run Speed
@@ -100,11 +95,13 @@ class Swim:
     @staticmethod
     def do(player):
         player.frame = (player.frame + PLAYER_FRAMES_PER_ACTION * PLAYER_ACTION_PER_TIME * game_framework.frame_time) % 4
+
         if player.is_move_once:
             player.y += player.dir * SWIM_SPEED_PPS * game_framework.frame_time
             player.is_move_once = False
-        if player.y < 90 or player.y > 250:
-            player.y -= player.dir * SWIM_SPEED_PPS * game_framework.frame_time
+        # if player.y < 90 or player.y > 250:
+        #     player.y -= player.dir * SWIM_SPEED_PPS * game_framework.frame_time
+        player.y = clamp(90, player.y, 250)
         player.swim_effect.update(player.x - 20, player.y + 90)
 
     @staticmethod
@@ -180,6 +177,7 @@ class Player:
         self.item_gauge = 0
         self.is_move_once = False
         self.water_background = Water_Background(130)
+        self.swim_fast = 1
 
     def handle_event(self, event):
         self.statemachine.handle_event(('INPUT', event))

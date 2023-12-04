@@ -20,4 +20,3 @@ class Swim_Effect:
     def update(self, x = 0, y = 0):
         self.x, self.y = x, y
         self.frame = (self.frame + self.frames_per_action * ACTION_PER_TIME * game_framework.frame_time) % 4
-        pass
