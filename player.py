@@ -159,8 +159,7 @@ class AutoSwim:
 
     @staticmethod
     def exit(player, e):
-        if spacekey_down(e):
-            player.booster()
+        pass
 
     @staticmethod
     def do(player):
@@ -228,7 +227,6 @@ class Player:
     def update(self):
         self.statemachine.update()
         print(self.item_gauge)
-
 
     def get_bb(self):
         if self.statemachine.cur_state == Idle:
