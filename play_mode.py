@@ -1,6 +1,7 @@
 from pico2d import *
 
 import character_select_mode
+import end_mode
 import game_world
 import game_framework
 import title_mode
@@ -9,10 +10,11 @@ from floor import Floor
 from item import Item, Obstacle
 from npc import NPC
 from player import Player
-from water import Water_Background, Line
+from water import Water_Background, Line, Finish_Line
 
 
 def handle_events():
+    global finish_line
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -27,12 +29,15 @@ def handle_events():
                 player.item_gauge = 0
                 player.swim_effect.frames_per_action = 8
                 player.swim_effect.time = get_time()
+        elif all(finish_line.is_swim_finish.values()):
+            game_framework.change_mode(end_mode)
         else:
             player.handle_event(event)
 
 
 def init():
     global countdown
+    global finish_line
 
     countdown = Countdown()
     game_world.add_object(countdown, 3)
@@ -42,37 +47,49 @@ def init():
     swimmer()
     collide()
 
+    finish_line = Finish_Line()
+    game_world.add_object(finish_line, 1)
+
 
 def collide():
     global player
     global item
     global box
+    global npc1
+    global npc2
 
     game_world.add_collision_pair('player:item', player, None)
     game_world.add_collision_pair('player:box', player, None)
+    game_world.add_collision_pair('player:end', player, None)
+    game_world.add_collision_pair('npc1:end', npc1, None)
+    game_world.add_collision_pair('npc2:end', npc2, None)
+    game_world.add_collision_pair('end:box', None, None)
+    game_world.add_collision_pair('end:item', None, None)
+
 
 
 def items():
     global item
     global box
     item = Item()
-    game_world.add_object(item, 1)
+    game_world.add_object(item, 2)
     box = Obstacle()
-    game_world.add_object(box, 1)
+    game_world.add_object(box, 2)
 
 
 def swimmer():
     global player
     global npc1
+    global npc2
 
     player = Player()
-    game_world.add_object(player, 1)
+    game_world.add_object(player, 2)
 
-    npc1 = NPC(350)
-    game_world.add_object(npc1, 1)
+    npc1 = NPC(510, 350)
+    game_world.add_object(npc1, 2)
 
-    npc2 = NPC(520)
-    game_world.add_object(npc2, 1)
+    npc2 = NPC(500, 520)
+    game_world.add_object(npc2, 2)
 
 
 def background():

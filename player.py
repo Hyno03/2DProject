@@ -190,7 +190,7 @@ class StateMachine:
 class Player:
     def __init__(self):
         self.image = load_image('Sprite/Player/redplayeranimation.png')
-        self.x, self.y = 100, 150
+        self.x, self.y = 500, 150
         self.width, self.height = 24, 24
         self.frame = 0
         self.dir = 0
@@ -221,4 +221,6 @@ class Player:
         if group == 'player:item':
             self.item_gauge += 1
         if group == 'player:box':
+            pass
+        if group == 'player:end':
             pass

@@ -1,6 +1,7 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, draw_rectangle
 
 import game_framework
+import game_world
 from swim_effect import Swim_Effect
 
 
@@ -94,9 +95,9 @@ class StateMachine:
 
 
 class NPC:
-    def __init__(self, y):
+    def __init__(self, x, y):
         self.image = load_image('Sprite/Player/blackplayeranimation.png')
-        self.x, self.y = 100, y
+        self.x, self.y = x, y
         self.width, self.height = 24, 24
         self.frame = 0
         self.dir = 0
@@ -110,6 +111,19 @@ class NPC:
 
     def draw(self):
         self.statemachine.draw()
+        draw_rectangle(*self.get_bb())
 
     def update(self):
         self.statemachine.update()
+
+    def get_bb(self):
+        if self.statemachine.cur_state == Idle:
+            return self.x - 25, self.y - 50, self.x + 25, self.y + 50
+        else:
+            return self.x - 30, self.y - 20, self.x + 30, self.y + 20
+
+    def handle_collision(self, group, other):
+        if group == 'npc1:end':
+            pass
+        if group == 'npc2:end':
+            pass

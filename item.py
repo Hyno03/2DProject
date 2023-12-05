@@ -18,6 +18,7 @@ class Item:
         self.item_drop = False
         self.random_time = random.randint(5,8)
         game_world.add_collision_pair('player:item', None, self)
+        game_world.add_collision_pair('end:item', None, self)
 
     def draw(self):
         if self.item_drop:
@@ -46,6 +47,8 @@ class Item:
     def handle_collision(self, group, other):
         if group == 'player:item':
             game_world.remove_object(self)
+        if group == 'end:item':
+            game_world.remove_object(self)
 
 
 class Obstacle:
@@ -59,6 +62,7 @@ class Obstacle:
         self.obstacle_drop = False
         self.random_time = random.randint(3,6)
         game_world.add_collision_pair('player:box', None, self)
+        game_world.add_collision_pair('end:box', None, self)
 
     def draw(self):
         if self.obstacle_drop:
@@ -88,3 +92,5 @@ class Obstacle:
     def handle_collision(self, group, other):
         if group == 'player:box':
             self.x += ACTION_PER_TIME * FRAMES_PER_ACTION * game_framework.frame_time
+        if group == 'end:box':
+            game_world.remove_object(self)

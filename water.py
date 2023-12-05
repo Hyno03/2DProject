@@ -1,6 +1,7 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, clamp, draw_rectangle
 
 import game_framework
+import game_world
 
 WATER_TIME_PER_ACTION = 0.1
 WATER_ACTION_PER_TIME = 1.0 / WATER_TIME_PER_ACTION
@@ -40,3 +41,58 @@ class Line:
 
     def update(self):
         pass
+
+
+class Finish_Line:
+    def __init__(self):
+        self.image = load_image('Sprite/Background/floor2.png')
+        self.x, self.y = 1300, 250
+        self.w, self.h = self.image.w, self.image.h
+        self.frames_per_action = 4
+        self.time = get_time()
+        self.the_winner = None
+        self.is_swim_finish = {'Npc1': False, 'Npc2': False, 'Player': False}
+        game_world.add_collision_pair('player:end', None, self)
+        game_world.add_collision_pair('npc1:end', None, self)
+        game_world.add_collision_pair('npc2:end', None, self)
+        game_world.add_collision_pair('end:box', self, None)
+        game_world.add_collision_pair('end:item', self, None)
+
+
+    def draw(self):
+        if get_time() - self.time > 5:
+            self.image.draw(self.x, self.y, self.w * 2, self.h * 2)
+            self.image.draw(self.x, self.y + 300, self.w * 2, self.h * 2)
+            self.image.draw(self.x+140, self.y, self.w * 2, self.h * 2)
+            self.image.draw(self.x+140, self.y + 300, self.w * 2, self.h * 2)
+            self.image.draw(self.x+280, self.y, self.w * 2, self.h * 2)
+            self.image.draw(self.x+280, self.y + 300, self.w * 2, self.h * 2)
+            self.image.draw(self.x+420, self.y, self.w * 2, self.h * 2)
+            self.image.draw(self.x+420, self.y + 300, self.w * 2, self.h * 2)
+            draw_rectangle(*self.get_bb())
+
+    def update(self):
+        self.x -= WATER_ACTION_PER_TIME * self.frames_per_action * game_framework.frame_time
+        self.x = clamp(600, self.x, 1300)
+        print(self.is_swim_finish)
+
+    def get_bb(self):
+        return self.x-70, self.y-450, self.x + 200, self.y + +450
+
+    def handle_collision(self, group, other):
+        if group == 'player:end':
+            if self.the_winner == None:
+                self.the_winner = 'Player'
+            self.is_swim_finish['Player'] = True
+        if group == 'npc1:end':
+            if self.the_winner == None:
+                self.the_winner = 'Npc1'
+            self.is_swim_finish['Npc1'] = True
+        if group == 'npc2:end':
+            if self.the_winner == None:
+                self.the_winner = 'Npc2'
+            self.is_swim_finish['Npc2'] = True
+        if group == 'end:box':
+            pass
+        if group == 'end:item':
+            pass
