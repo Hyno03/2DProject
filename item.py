@@ -54,7 +54,6 @@ class Item:
 class Obstacle:
     def __init__(self):
         self.image = load_image('Sprite/Item/Box1.png')
-        self.image2 = load_image('Sprite/Item/Box1_2.png')
         self.x, self.y = 900, 165
         self.w, self.h = 32, 32
         self.frame = 0
@@ -66,7 +65,6 @@ class Obstacle:
 
     def draw(self):
         if self.obstacle_drop:
-            self.image2.clip_draw(self.frame * self.w, 0, self.w, self.h, self.x, self.y - 40, self.w * 2, self.h * 2)
             self.image.clip_draw(self.frame * self.w, 0, self.w, self.h, self.x, self.y, self.w * 2, self.h * 2)
             draw_rectangle(*self.get_bb())
 

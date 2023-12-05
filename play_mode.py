@@ -105,7 +105,7 @@ def background():
 
     # floor
     front_floor = Floor(200, 20)
-    game_world.add_object(front_floor, 3)
+    game_world.add_object(front_floor, 2)
 
     #line
     line1 = Line(257)

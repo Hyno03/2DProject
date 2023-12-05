@@ -1,5 +1,5 @@
 from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, \
-    draw_rectangle, clamp
+    draw_rectangle, clamp, load_font
 
 import game_framework
 from swim_effect import Swim_Effect
@@ -94,7 +94,7 @@ class Swim_updown:
     def do(player):
         player.frame = (player.frame + PLAYER_FRAMES_PER_ACTION * PLAYER_ACTION_PER_TIME * game_framework.frame_time) % 4
         player.y += player.dir * player.speed * game_framework.frame_time
-        player.y = clamp(90, player.y, 250)
+        player.y = clamp(100, player.y, 250)
         player.swim_effect.update(player.x - 20, player.y + 90)
 
     @staticmethod
@@ -199,17 +199,18 @@ class Player:
         self.swim_effect = Swim_Effect(self.x - 20, self.y + 90)
         self.item_gauge = 5
         self.move_once = False
+        self.font = load_font('neodgm.ttf', 30)
 
     def handle_event(self, event):
         self.statemachine.handle_event(('INPUT', event))
 
     def draw(self):
         self.statemachine.draw()
+        self.font.draw(810, 35, f'Item : {self.item_gauge}', (255, 255, 255))
         draw_rectangle(*self.get_bb())
 
     def update(self):
         self.statemachine.update()
-        # print(self.item_gauge)
 
     def get_bb(self):
         if self.statemachine.cur_state == Idle:
