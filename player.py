@@ -1,5 +1,5 @@
 from pico2d import load_image, get_time, SDL_KEYDOWN, SDL_KEYUP, SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, \
-    draw_rectangle, clamp, load_font
+    draw_rectangle, clamp, load_font, load_music, load_wav
 
 import game_framework
 from swim_effect import Swim_Effect
@@ -35,6 +35,10 @@ def rightkey_down(e):
 
 def rightkey_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
+
+
+def spacekey_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 
 
 def start_swimming(e):
@@ -107,11 +111,12 @@ class Swim_updown:
 class Swim_leftright:
     @staticmethod
     def enter(player, e):
-        player.speed = SWIM_SPEED_PPS * 5
+        player.speed = SWIM_SPEED_PPS * 8
         if leftkey_down(e) or rightkey_down(e):
             player.dir = 1
             player.move_once = True
         player.swim_time = get_time()
+
 
     @staticmethod
     def exit(player, e):
@@ -138,7 +143,12 @@ class Swim_leftright:
 class AutoSwim:
     @staticmethod
     def enter(player, e):
-        pass
+        player.speed = SWIM_SPEED_PPS / 5
+        if spacekey_down(e):
+            player.dir = 1
+            player.booster = True
+            player.booster_time = get_time()
+
 
     @staticmethod
     def exit(player, e):
@@ -146,7 +156,15 @@ class AutoSwim:
 
     @staticmethod
     def do(player):
+        if get_time() - player.swim_time > 1:
+            player.dir = -1
+            player.x += player.dir * player.speed * game_framework.frame_time
+        if player.booster and get_time() - player.booster_time > 1:
+            player.dir = 0
+            player.booster = False
+            player.x += player.dir * player.speed * game_framework.frame_time
         player.frame = (player.frame + PLAYER_FRAMES_PER_ACTION * PLAYER_ACTION_PER_TIME * game_framework.frame_time) % 4
+        player.x = clamp(100, player.x, 600)
         player.swim_effect.update(player.x - 20, player.y + 90)
 
     @staticmethod
@@ -163,9 +181,9 @@ class StateMachine:
         self.cur_state = Idle
         self.transitions = {
             Idle: {start_swimming: AutoSwim},
-            Swim_updown: {upkey_up: AutoSwim, downkey_up: AutoSwim, leftkey_down: Swim_leftright, rightkey_down: Swim_leftright},
-            Swim_leftright: {upkey_down: Swim_updown, downkey_down: Swim_updown, leftkey_up: AutoSwim, rightkey_up: AutoSwim},
-            AutoSwim: {upkey_down: Swim_updown, downkey_down: Swim_updown, leftkey_down: Swim_leftright, rightkey_down: Swim_leftright}
+            Swim_updown: {upkey_up: AutoSwim, downkey_up: AutoSwim, leftkey_down: Swim_leftright, rightkey_down: Swim_leftright, spacekey_down: AutoSwim},
+            Swim_leftright: {upkey_down: Swim_updown, downkey_down: Swim_updown, leftkey_up: AutoSwim, rightkey_up: AutoSwim, spacekey_down: AutoSwim},
+            AutoSwim: {upkey_down: Swim_updown, downkey_down: Swim_updown, leftkey_down: Swim_leftright, rightkey_down: Swim_leftright, spacekey_down: AutoSwim}
         }
 
     def start(self):
@@ -197,9 +215,11 @@ class Player:
         self.statemachine = StateMachine(self)
         self.statemachine.start()
         self.swim_effect = Swim_Effect(self.x - 20, self.y + 90)
-        self.item_gauge = 5
-        self.move_once = False
+        self.item_gauge = 0
+        self.move_once, self.booster = False, False
         self.font = load_font('neodgm.ttf', 30)
+        self.swim_time, self.booster_time = get_time(), get_time()
+
 
     def handle_event(self, event):
         self.statemachine.handle_event(('INPUT', event))

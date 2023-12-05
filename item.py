@@ -23,7 +23,7 @@ class Item:
     def draw(self):
         if self.item_drop:
             self.image.clip_draw(self.frame * self.w, 0, self.w, self.h, self.x, self.y, self.w * 2.5, self.h * 2.5)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
 
     def update(self):
         if not self.item_drop and get_time() - self.time > self.random_time:
@@ -66,7 +66,7 @@ class Obstacle:
     def draw(self):
         if self.obstacle_drop:
             self.image.clip_draw(self.frame * self.w, 0, self.w, self.h, self.x, self.y, self.w * 2, self.h * 2)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
 
     def update(self):
         if not self.obstacle_drop and get_time() - self.time > self.random_time:

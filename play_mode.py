@@ -26,8 +26,8 @@ def handle_events():
                 for water_background in water_backgrounds:
                     water_background.frames_per_action = 24
                     water_background.time = get_time()
-                player.item_gauge = 0
-                player.swim_effect.frames_per_action = 8
+                # player.item_gauge = 0
+                # player.swim_effect.frames_per_action = 8
                 player.swim_effect.time = get_time()
         elif all(finish_line.is_swim_finish.values()):
             game_framework.change_mode(end_mode)

@@ -121,13 +121,13 @@ class NPC:
 
     def draw(self):
         self.statemachine.draw()
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def update(self):
-        if get_time() - self.rand_time > 2 and get_time() - self.time >5:
+        if get_time() - self.rand_time > 2 and get_time() - self.time > 15:
             self.dir = random.choice(self.dir_rand)
             self.rand_time = get_time()
-        if get_time() - self.time < 5:
+        if get_time() - self.time < 15:
             self.dir = 1
         self.random_value = random.randint(3, 6)
         self.speed = SWIM_SPEED_PPS / self.random_value

@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time, clamp, draw_rectangle
+from pico2d import load_image, get_time, clamp, draw_rectangle, load_music
 
 import game_framework
 import game_world
@@ -14,6 +14,9 @@ class Water_Background:
         self.left_screen = 600
         self.frames_per_action = 8
         self.time = get_time()
+        self.bgm = load_music('Sound/bgm_action_1.mp3')
+        self.bgm.set_volume(32)
+        self.bgm.repeat_play()
 
     def draw(self):
         self.image.draw(self.x, self.y, self.w*2, self.h*2)
@@ -59,7 +62,7 @@ class Finish_Line:
 
 
     def draw(self):
-        if get_time() - self.time > 5:
+        if get_time() - self.time > 15:
             self.image.draw(self.x, self.y, self.w * 2, self.h * 2)
             self.image.draw(self.x, self.y + 300, self.w * 2, self.h * 2)
             self.image.draw(self.x+140, self.y, self.w * 2, self.h * 2)
@@ -68,12 +71,11 @@ class Finish_Line:
             self.image.draw(self.x+280, self.y + 300, self.w * 2, self.h * 2)
             self.image.draw(self.x+420, self.y, self.w * 2, self.h * 2)
             self.image.draw(self.x+420, self.y + 300, self.w * 2, self.h * 2)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
 
     def update(self):
         self.x -= WATER_ACTION_PER_TIME * self.frames_per_action * game_framework.frame_time
         self.x = clamp(700, self.x, 1300)
-        print(self.is_swim_finish)
 
     def get_bb(self):
         return self.x-70, self.y-450, self.x + 200, self.y + +450
