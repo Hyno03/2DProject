@@ -74,23 +74,22 @@ class Finish_Line:
     def update(self):
         self.x -= WATER_ACTION_PER_TIME * self.frames_per_action * game_framework.frame_time
         self.x = clamp(600, self.x, 1300)
-        print(self.is_swim_finish)
 
     def get_bb(self):
         return self.x-70, self.y-450, self.x + 200, self.y + +450
 
     def handle_collision(self, group, other):
         if group == 'player:end':
-            if self.the_winner == None:
+            if self.the_winner is None:
                 self.the_winner = 'Player'
             self.is_swim_finish['Player'] = True
         if group == 'npc1:end':
-            if self.the_winner == None:
-                self.the_winner = 'Npc1'
+            if self.the_winner is None:
+                self.the_winner = 'Npc'
             self.is_swim_finish['Npc1'] = True
         if group == 'npc2:end':
-            if self.the_winner == None:
-                self.the_winner = 'Npc2'
+            if self.the_winner is None:
+                self.the_winner = 'Npc'
             self.is_swim_finish['Npc2'] = True
         if group == 'end:box':
             pass

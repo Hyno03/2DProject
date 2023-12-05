@@ -31,6 +31,7 @@ def handle_events():
                 player.swim_effect.time = get_time()
         elif all(finish_line.is_swim_finish.values()):
             game_framework.change_mode(end_mode)
+            end_mode.winner = finish_line.the_winner
         else:
             player.handle_event(event)
 
