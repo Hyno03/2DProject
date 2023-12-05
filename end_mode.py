@@ -5,7 +5,6 @@ import game_world
 import play_mode
 import title_mode
 from floor import Blue_Floor
-from water import Finish_Line
 
 
 def handle_events():
@@ -14,7 +13,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            game_framework.change_mode(play_mode)
+            game_framework.change_mode(title_mode)
 
 
 

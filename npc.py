@@ -1,7 +1,10 @@
-from pico2d import load_image, get_time, draw_rectangle
+import random
+
+from pico2d import load_image, get_time, draw_rectangle, clamp
 
 import game_framework
 import game_world
+from behavior_tree import BehaviorTree
 from swim_effect import Swim_Effect
 
 
@@ -57,6 +60,8 @@ class AutoSwim:
     @staticmethod
     def do(npc):
         npc.frame = (npc.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        npc.x += npc.dir * npc.speed * game_framework.frame_time
+        npc.x = clamp(100, npc.x, 600)
         npc.swim_effect.update(npc.x - 20, npc.y + 90)
 
     @staticmethod
@@ -100,10 +105,15 @@ class NPC:
         self.x, self.y = x, y
         self.width, self.height = 24, 24
         self.frame = 0
-        self.dir = 0
+        self.dir = 1
         self.statemachine = StateMachine(self)
         self.statemachine.start()
         self.swim_effect = Swim_Effect(self.x - 20, self.y + 90)
+        self.speed = SWIM_SPEED_PPS
+        self.dir_rand = [1, -1]
+        self.rand_time, self.time = get_time(), get_time()
+        game_world.add_collision_pair('npc:end', self, None)
+
 
 
     def handle_event(self, event):
@@ -114,6 +124,13 @@ class NPC:
         draw_rectangle(*self.get_bb())
 
     def update(self):
+        if get_time() - self.rand_time > 2 and get_time() - self.time >5:
+            self.dir = random.choice(self.dir_rand)
+            self.rand_time = get_time()
+        if get_time() - self.time < 5:
+            self.dir = 1
+        self.random_value = random.randint(3, 6)
+        self.speed = SWIM_SPEED_PPS / self.random_value
         self.statemachine.update()
 
     def get_bb(self):
@@ -123,7 +140,5 @@ class NPC:
             return self.x - 30, self.y - 20, self.x + 30, self.y + 20
 
     def handle_collision(self, group, other):
-        if group == 'npc1:end':
-            pass
-        if group == 'npc2:end':
-            pass
+        if group == 'npc:end':
+            self.statemachine.cur_state = Idle

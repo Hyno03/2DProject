@@ -51,10 +51,9 @@ class Finish_Line:
         self.frames_per_action = 4
         self.time = get_time()
         self.the_winner = None
-        self.is_swim_finish = {'Npc1': False, 'Npc2': False, 'Player': False}
+        self.is_swim_finish = {'Npc1': False, 'Player': False}
         game_world.add_collision_pair('player:end', None, self)
-        game_world.add_collision_pair('npc1:end', None, self)
-        game_world.add_collision_pair('npc2:end', None, self)
+        game_world.add_collision_pair('npc:end', None, self)
         game_world.add_collision_pair('end:box', self, None)
         game_world.add_collision_pair('end:item', self, None)
 
@@ -73,7 +72,8 @@ class Finish_Line:
 
     def update(self):
         self.x -= WATER_ACTION_PER_TIME * self.frames_per_action * game_framework.frame_time
-        self.x = clamp(600, self.x, 1300)
+        self.x = clamp(700, self.x, 1300)
+        print(self.is_swim_finish)
 
     def get_bb(self):
         return self.x-70, self.y-450, self.x + 200, self.y + +450
@@ -83,14 +83,10 @@ class Finish_Line:
             if self.the_winner is None:
                 self.the_winner = 'Player'
             self.is_swim_finish['Player'] = True
-        if group == 'npc1:end':
+        if group == 'npc:end':
             if self.the_winner is None:
                 self.the_winner = 'Npc'
             self.is_swim_finish['Npc1'] = True
-        if group == 'npc2:end':
-            if self.the_winner is None:
-                self.the_winner = 'Npc'
-            self.is_swim_finish['Npc2'] = True
         if group == 'end:box':
             pass
         if group == 'end:item':

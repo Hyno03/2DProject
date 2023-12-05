@@ -107,7 +107,7 @@ class Swim_updown:
 class Swim_leftright:
     @staticmethod
     def enter(player, e):
-        player.speed = SWIM_SPEED_PPS * 2
+        player.speed = SWIM_SPEED_PPS * 5
         if leftkey_down(e) or rightkey_down(e):
             player.dir = 1
             player.move_once = True
@@ -125,7 +125,7 @@ class Swim_leftright:
             player.move_once = False
         if get_time() - player.swim_time > 2:
             player.dir = -1
-        player.x = clamp(100, player.x, 510)
+        player.x = clamp(100, player.x, 600)
         player.swim_effect.update(player.x - 20, player.y + 90)
 
     @staticmethod
@@ -190,7 +190,7 @@ class StateMachine:
 class Player:
     def __init__(self):
         self.image = load_image('Sprite/Player/redplayeranimation.png')
-        self.x, self.y = 500, 150
+        self.x, self.y = 100, 150
         self.width, self.height = 24, 24
         self.frame = 0
         self.dir = 0
@@ -224,4 +224,4 @@ class Player:
         if group == 'player:box':
             pass
         if group == 'player:end':
-            pass
+            self.statemachine.cur_state = Idle

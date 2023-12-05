@@ -62,8 +62,7 @@ def collide():
     game_world.add_collision_pair('player:item', player, None)
     game_world.add_collision_pair('player:box', player, None)
     game_world.add_collision_pair('player:end', player, None)
-    game_world.add_collision_pair('npc1:end', npc1, None)
-    game_world.add_collision_pair('npc2:end', npc2, None)
+    game_world.add_collision_pair('npc:end', None, None)
     game_world.add_collision_pair('end:box', None, None)
     game_world.add_collision_pair('end:item', None, None)
 
@@ -86,10 +85,10 @@ def swimmer():
     player = Player()
     game_world.add_object(player, 2)
 
-    npc1 = NPC(510, 350)
+    npc1 = NPC(100, 350)
     game_world.add_object(npc1, 2)
 
-    npc2 = NPC(500, 520)
+    npc2 = NPC(100, 520)
     game_world.add_object(npc2, 2)
 
 

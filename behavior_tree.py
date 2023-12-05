@@ -89,14 +89,6 @@ class Selector(Node):
         return self.value
 
 
-
-
-
-
-
-
-
-
 class Sequence(Node):
     def __init__(self, name, *nodes):
         self.children = list(nodes)
