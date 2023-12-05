@@ -1,6 +1,7 @@
 from pico2d import *
 
 import character_select_mode
+import describe_mode
 import end_mode
 import game_world
 import game_framework
@@ -20,14 +21,15 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_mode(title_mode)
+            game_framework.change_mode(describe_mode)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             if player.item_gauge >= 5:
                 for water_background in water_backgrounds:
                     water_background.frames_per_action = 24
                     water_background.time = get_time()
-                # player.item_gauge = 0
-                # player.swim_effect.frames_per_action = 8
+                player.item_gauge = 0
+                player.swim_effect.frames_per_action = 8
+                player.dir = 1
                 player.swim_effect.time = get_time()
         elif all(finish_line.is_swim_finish.values()):
             game_framework.change_mode(end_mode)
@@ -48,8 +50,10 @@ def init():
     swimmer()
     collide()
 
+    time = get_time()
     finish_line = Finish_Line()
-    game_world.add_object(finish_line, 1)
+    if get_time() - time > 30:
+        game_world.add_object(finish_line, 1)
 
 
 def collide():

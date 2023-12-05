@@ -1,16 +1,16 @@
 from pico2d import load_image, clear_canvas, update_canvas, get_events, SDL_KEYDOWN, SDLK_ESCAPE, SDL_QUIT, SDLK_SPACE
 
 import character_select_mode
-import describe_mode
 import game_world
 import game_framework
 import play_mode
+from describe_page import Describe_Page
 from title_page import Title_Page
 
 
 def init():
-    title_page = Title_Page()
-    game_world.add_object(title_page, 0)
+    describe_page = Describe_Page()
+    game_world.add_object(describe_page, 0)
 
 
 def finish():
@@ -35,4 +35,4 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            game_framework.change_mode(describe_mode)
+            game_framework.change_mode(play_mode)
