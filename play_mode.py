@@ -29,7 +29,6 @@ def handle_events():
                     water_background.time = get_time()
                 player.item_gauge = 0
                 player.swim_effect.frames_per_action = 8
-                player.dir = 1
                 player.swim_effect.time = get_time()
         elif all(finish_line.is_swim_finish.values()):
             game_framework.change_mode(end_mode)
@@ -41,6 +40,7 @@ def handle_events():
 def init():
     global countdown
     global finish_line
+    global time
 
     countdown = Countdown()
     game_world.add_object(countdown, 3)
@@ -52,8 +52,6 @@ def init():
 
     time = get_time()
     finish_line = Finish_Line()
-    if get_time() - time > 30:
-        game_world.add_object(finish_line, 1)
 
 
 def collide():
@@ -122,6 +120,9 @@ def finish():
 
 
 def update():
+    global time
+    if get_time() - time > 30:
+        game_world.add_object(finish_line, 1)
     game_world.update()
     game_world.handle_collisions()
 

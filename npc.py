@@ -61,7 +61,7 @@ class AutoSwim:
     def do(npc):
         npc.frame = (npc.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
         npc.x += npc.dir * npc.speed * game_framework.frame_time
-        npc.x = clamp(100, npc.x, 600)
+        npc.x = clamp(100, npc.x, 900)
         npc.swim_effect.update(npc.x - 20, npc.y + 90)
 
     @staticmethod
@@ -112,6 +112,7 @@ class NPC:
         self.speed = SWIM_SPEED_PPS
         self.dir_rand = [1, -1]
         self.rand_time, self.time = get_time(), get_time()
+        self.random_value = 1
         game_world.add_collision_pair('npc:end', self, None)
 
 
@@ -124,12 +125,13 @@ class NPC:
         # draw_rectangle(*self.get_bb())
 
     def update(self):
-        if get_time() - self.rand_time > 2 and get_time() - self.time > 15:
+        if get_time() - self.rand_time > 2 and get_time() - self.time < 30:
             self.dir = random.choice(self.dir_rand)
+            self.random_value = random.randint(5, 10)
             self.rand_time = get_time()
-        if get_time() - self.time < 15:
+        if get_time() - self.time > 30:
             self.dir = 1
-        self.random_value = random.randint(3, 6)
+            self.random_value = 5
         self.speed = SWIM_SPEED_PPS / self.random_value
         self.statemachine.update()
 

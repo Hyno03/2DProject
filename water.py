@@ -62,7 +62,7 @@ class Finish_Line:
 
 
     def draw(self):
-        if get_time() - self.time > 15:
+        if get_time() - self.time > 30:
             self.image.draw(self.x, self.y, self.w * 2, self.h * 2)
             self.image.draw(self.x, self.y + 300, self.w * 2, self.h * 2)
             self.image.draw(self.x+140, self.y, self.w * 2, self.h * 2)
@@ -75,7 +75,7 @@ class Finish_Line:
 
     def update(self):
         self.x -= WATER_ACTION_PER_TIME * self.frames_per_action * game_framework.frame_time
-        self.x = clamp(700, self.x, 1300)
+        self.x = clamp(900, self.x, 1300)
 
     def get_bb(self):
         return self.x-70, self.y-450, self.x + 200, self.y + +450
